@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Yarn.Unity;
+using Yarn.Utility;
 
 public class Player : MonoBehaviour
 {
@@ -27,7 +29,9 @@ public class Player : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] float walkSpeed;
-    [SerializeField] float turnSpeed;
+
+    [Header("Misc")]
+    bool pauseControl = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -41,18 +45,22 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckForControlPause();
         GetInputs();
-        
     }
 
     private void FixedUpdate()
     {
-        MovementUpdate();
+        if(!pauseControl)
+        {
+            MovementUpdate();
+        }
     }
 
     void GetInputs()
     {
         movementInput = movement.ReadValue<Vector2>();
+        
     }
 
     void MovementUpdate()
@@ -76,5 +84,10 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
         }
 
+    }
+    
+    void CheckForControlPause()
+    {
+        //pauseControl = Yarn.Unity.DialogueRunner.IsDialogueRunning;
     }
 }
